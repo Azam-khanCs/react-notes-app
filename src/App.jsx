@@ -1,17 +1,26 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import './App.css'
 import 'react-mde/lib/styles/css/react-mde-all.css';
 import Sidebar from "./components/Sidebar"
 import Editor from "./components/Editor"
-import { data } from "./data"
 import Split from "react-split"
 import { nanoid } from "nanoid"
 
 export default function App() {
-  const [notes, setNotes] = useState([])
-  const [currentNoteId, setCurrentNoteId] = useState(
-    (notes[0] && notes[0].id) || ""
+  const [notes, setNotes] = useState(
+    JSON.parse(localStorage.getItem("notes")) || []
   )
+  const [currentNoteId, setCurrentNoteId] = useState(
+    (notes[0]?.id) || ""
+  )
+
+  useEffect(() => {
+    localStorage.setItem("notes", JSON.stringify(notes))
+  }, [notes])
+
+  const currentNote =
+    notes.find(note => note.id === currentNoteId)
+    || notes[0]
 
   function createNewNote() {
     const newNote = {
@@ -22,18 +31,24 @@ export default function App() {
     setCurrentNoteId(newNote.id)
   }
 
-  function updateNote(text) {
-    setNotes(oldNotes => oldNotes.map(oldNote => {
-      return oldNote.id === currentNoteId
-        ? { ...oldNote, body: text }
-        : oldNote
-    }))
+  function deleteNote(event, noteId) {
+    event.stopPropagation()
+    setNotes(oldNotes => oldNotes.filter(note => note.id !== noteId))
   }
 
-  function findCurrentNote() {
-    return notes.find(note => {
-      return note.id === currentNoteId
-    }) || notes[0]
+  function updateNote(text) {
+    setNotes(oldNotes => {
+      const noteArray = []
+      for (let i = 0; i < oldNotes.length; i++) {
+        const oldNote = oldNotes[i]
+        if (oldNote.id === currentNoteId) {
+          noteArray.unshift({ ...oldNote, body: text })
+        } else {
+          noteArray.push(oldNote)
+        }
+      }
+      return noteArray
+    })
   }
 
   return (
@@ -48,15 +63,16 @@ export default function App() {
           >
             <Sidebar
               notes={notes}
-              currentNote={findCurrentNote()}
+              currentNote={currentNote}
               setCurrentNoteId={setCurrentNoteId}
               newNote={createNewNote}
+              deleteNote={deleteNote}
             />
             {
               currentNoteId &&
               notes.length > 0 &&
               <Editor
-                currentNote={findCurrentNote()}
+                currentNote={currentNote}
                 updateNote={updateNote}
               />
             }
