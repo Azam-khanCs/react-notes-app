@@ -1,7 +1,7 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 0 20px;
 }
 
 button:focus {
@@ -29,19 +29,33 @@ button:focus {
 
 .sidebar--header {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 }
 
 .sidebar--header>h3 {
-  font-size: 1.75rem;
+  font-size: 2rem;
+  font-family: cursive;
+}
+
+.mde-preview {
+  min-height: 90vh !important;
+}
+
+.mde-header .mde-tabs button.selected {
+  border: 1px solid #c8ccd0;
+  font-weight: 600;
+  background: #c6d6d7;
+  padding: 5px;
 }
 
 .new-note {
   cursor: pointer;
-  background-color: #4A4E74;
+  background-color: #42ad35;
   border: none;
+  font-size: 25px;
   color: white;
+  font-weight: bold;
   border-radius: 3px;
   height: 30px;
   width: 30px;

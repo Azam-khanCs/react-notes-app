@@ -11,6 +11,7 @@ export default function Sidebar(props) {
       >
         <h4 className="text-snippet">{note.body.split("/n")[0]}</h4>
         <button
+          title="Delete note"
           className="delete-btn"
           onClick={(event) => props.deleteNote(event, note.id)}
         >
@@ -24,7 +25,9 @@ export default function Sidebar(props) {
     <section className="pane sidebar">
       <div className="sidebar--header">
         <h3>Notes</h3>
-        <button className="new-note" onClick={props.newNote}>+</button>
+        <button
+          title="Add new note"
+          className="new-note" onClick={props.newNote}>+</button>
       </div>
       {noteElements}
     </section>
